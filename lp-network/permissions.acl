@@ -1,0 +1,196 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+//////Member Access
+
+//Members to have access only to their own account
+rule CustomerAccessOwnRecord {
+    description: "Allow Member to access only their profile"
+    participant(p): "org.example.lpnetwork.Customer"
+    operation: ALL
+    resource(r): "org.example.lpnetwork.Customer"
+    condition: (r.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+//Customer Not to have access to other customer accounts
+rule CustomerAccessCustomer {
+    description: "Deny Customer access to other Customer accounts"
+    participant: "org.example.lpnetwork.Customer"
+    operation: ALL
+    resource: "org.example.lpnetwork.Customer"
+    action: DENY
+}
+
+//Customer have access to Brand on the network
+rule CustomerAccessBrand {
+    description: "Allow Customer access to all Brand on the network"
+    participant: "org.example.lpnetwork.Customer"
+    operation: ALL
+    resource: "org.example.lpnetwork.Brand"
+    action: ALLOW
+}
+//Customer have access to Store on the network
+rule CustomerAccessStore {
+    description: "Allow Customer access to all Store on the network"
+    participant: "org.example.lpnetwork.Customer"
+    operation: ALL
+    resource: "org.example.lpnetwork.Store"
+    action: ALLOW
+}
+rule AdminAccessBrand {
+    description: "Allow Customer access to all Store on the network"
+    participant: "org.example.lpnetwork.Admin"
+    operation: ALL
+    resource: "org.example.lpnetwork.Brand"
+    action: ALLOW
+}
+rule AdminAccessStore {
+    description: "Allow Customer access to all Store on the network"
+    participant: "org.example.lpnetwork.Admin"
+    operation: ALL
+    resource: "org.example.lpnetwork.Store"
+    action: ALLOW
+}
+rule AdminAccessCustomer {
+    description: "Allow Customer access to all Store on the network"
+    participant: "org.example.lpnetwork.Admin"
+    operation: ALL
+    resource: "org.example.lpnetwork.Customer"
+    action: ALLOW
+}
+
+rule BrandAccessOwnRecord {
+    description: "Allow Partner to access only their profile"
+    participant(p): "org.example.lpnetwork.Brand"
+    operation: ALL
+    resource(r): "org.example.lpnetwork.Brand"
+    condition: (r.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+//Partners Not to have access to other brand accounts
+rule BrandAccessBrand {
+    description: "Deny Brand access to other Brand accounts"
+    participant: "org.example.lpnetwork.Brand"
+    operation: ALL
+    resource: "org.example.lpnetwork.Brand"
+    action: DENY
+}
+//Partners Not to have access to other brand accounts
+rule StoreAccessStore {
+    description: "Deny Store access to other Store accounts"
+    participant: "org.example.lpnetwork.Store"
+    operation: ALL
+    resource: "org.example.lpnetwork.Store"
+    action: DENY
+}
+
+//Partners Not to have access to Members on the network
+rule BrandAccessCustomer {
+    description: "Deny Brand access to Customer on the network"
+    participant: "org.example.lpnetwork.Brand"
+    operation: ALL
+    resource: "org.example.lpnetwork.Customer"
+    action: DENY
+}
+//Partners Not to have access to Members on the network
+rule StoreAccessCustomer {
+    description: "Deny Store access to Customer on the network"
+    participant: "org.example.lpnetwork.Store"
+    operation: ALL
+    resource: "org.example.lpnetwork.Customer"
+    action: DENY
+}
+rule StoreAccessAdmin {
+    description: "Deny Store access to Admin on the network"
+    participant: "org.example.lpnetwork.Store"
+    operation: ALL
+    resource: "org.example.lpnetwork.Admin"
+    action: DENY
+}
+rule BrandAccessAdmin {
+    description: "Deny Brand access to Admin on the network"
+    participant: "org.example.lpnetwork.Brand"
+    operation: ALL
+    resource: "org.example.lpnetwork.Admin"
+    action: DENY
+}
+rule CustomerAccessAdmin {
+    description: "Deny Customer access to Admin on the network"
+    participant: "org.example.lpnetwork.Customer"
+    operation: ALL
+    resource: "org.example.lpnetwork.Admin"
+    action: DENY
+}
+
+
+
+
+//Customer to have access only to RedeemPoints_to_Store transaction where they are the customer
+rule CustomerAccessRedeemPoints_to_Store {
+    description: "Allow Customer access only to RedeemPoints_to_Store transaction where they are the customer"
+    participant(p): "org.example.lpnetwork.Customer"
+    operation: ALL
+    resource(r): "org.example.lpnetwork.RedeemPoints_to_Store"
+    condition: (r.member.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+//Customer to have access only to RedeemPoints_to_Brand transaction where they are the customer
+rule CustomerAccessRedeemPoints_to_Brand {
+    description: "Allow Customer access only to RedeemPoints_to_Brand transaction where they are the customer"
+    participant(p): "org.example.lpnetwork.Customer"
+    operation: ALL
+    resource(r): "org.example.lpnetwork.RedeemPoints_to_Brand"
+    condition: (r.member.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+
+rule CustomerAccessSharePoints {
+    description: "Allow Customer access only to UsePoints transaction where they are the customer"
+    participant(p): "org.example.lpnetwork.Customer"
+    operation: ALL
+    resource(r): "org.example.lpnetwork.SharePoints"
+    condition: (r.member.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+//////Partner Access
+
+//Partners to have access only to their own account
+
+rule SystemACL {
+  description:  "System ACL to permit all access"
+  participant: "ANY"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
